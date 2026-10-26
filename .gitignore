@@ -1,0 +1,64 @@
+# --- C/C++ build artifacts ---
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.so.*
+*.dylib
+*.dll
+*.exe
+*.out
+*.app
+*.d
+*.gch
+*.pch
+
+# --- Build directories ---
+build/
+build-*/
+cmake-build-*/
+out/
+bin/
+lib/
+
+# --- CMake ---
+CMakeCache.txt
+CMakeFiles/
+CMakeUserPresets.json
+cmake_install.cmake
+install_manifest.txt
+CTestTestfile.cmake
+Testing/
+_deps/
+compile_commands.json
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+.pytest_cache/
+
+# --- Benchmark / profiling output ---
+*.prof
+perf.data*
+callgrind.out.*
+gmon.out
+
+# --- Editors / IDEs ---
+.vscode/
+.idea/
+.cache/
+.clangd/
+*.swp
+*~
+
+# --- OS ---
+.DS_Store
+Thumbs.db
