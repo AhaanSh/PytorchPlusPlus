@@ -38,3 +38,24 @@ public:
 
 
 }; 
+
+class Tensor {
+    std::shared_ptr<Storage> storage; 
+    std::vector<int64_t> shape; 
+   std::vector<int64_t> strides; 
+    int64_t offset; 
+
+public: 
+
+    explicit Tensor(std::shared_ptr<Storage> s, std::vector<int64_t> shape_in, std::vector<int64_t> strides_in, int64_t offset_in) : storage(std::move(s)), shape(std::move(shape_in)), strides(std::move(strides_in)), offset(offset_in) {
+        if (shape.size() != strides.size()) throw std::invalid_argument("Shape and Strides need same size"); 
+        if (offset < 0) throw std::invalid_argument("Can't have negative offset"); 
+        if (storage == nullptr) throw std::invalid_argument("Can't have null storage"); 
+        for (int64_t elem : shape) {
+            if (elem < 0) throw std::invalid_argument("Shape can't have negative argument"); 
+        }
+    }
+
+    
+
+}; 
