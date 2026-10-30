@@ -67,6 +67,31 @@ public:
 
         return tempStrides; 
     }
+
+    //finds the product of all the elements in shapes to return the total number of elements 
+    static int64_t numel(const std::vector<int64_t>& shapes) {
+        int64_t total = 1; 
+        for (int64_t s : shapes) total *= s; 
+        return total; 
+    }
+
+    //return a tensor of specific shape and fill with val
+    static Tensor full(const std::vector<int64_t>& shapes, float val) {
+        std::vector<int64_t> stridesIn = getStrides(shapes); 
+        int64_t numElem = numel(shapes); 
+        std::shared_ptr<Storage> s = std::make_shared<Storage>(numElem, val); 
+        return Tensor(std::move(s), shapes, std::move(stridesIn), 0); 
+    }
+
+    //return Tensor of shape filled with 0's 
+    static Tensor zeros(const std::vector<int64_t>& shapes) {
+        return full(shapes, 0.0f); 
+    }
+
+    //return Tensor of Shape filled with 1's 
+    static Tensor ones(const std::vector<int64_t>& shapes) {
+        return full(shapes, 1.0f); 
+    }
 }; 
 
 
