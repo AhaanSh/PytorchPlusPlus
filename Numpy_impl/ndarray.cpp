@@ -56,6 +56,18 @@ public:
         }
     }
 
+    //return the strides vector given the shape 
+    static std::vector<int64_t> getStrides(const std::vector<int64_t>& shapes) {
+        int64_t total = 1; 
+        std::vector<int64_t> tempStrides(shapes.size(), 0); 
+        for (int64_t i = static_cast<int64_t>(shapes.size()) - 1; i >= 0; i--) {
+            tempStrides[i] = total; 
+            total *= shapes[i]; 
+        }
+
+        return tempStrides; 
+    }
+
     
 
 }; 
