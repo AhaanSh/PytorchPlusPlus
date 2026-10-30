@@ -42,7 +42,7 @@ public:
 class Tensor {
     std::shared_ptr<Storage> storage; 
     std::vector<int64_t> shape; 
-   std::vector<int64_t> strides; 
+    std::vector<int64_t> strides; 
     int64_t offset; 
 
 public: 
@@ -67,7 +67,6 @@ public:
 
         return tempStrides; 
     }
-
-    
-
 }; 
+
+
