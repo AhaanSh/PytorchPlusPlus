@@ -66,6 +66,18 @@ private:
         return total; 
     }
 
+    int64_t flatIdx(const std::vector<int64_t>& indices) const {
+        if (static_cast<int64_t>(indices.size()) != dim()) throw std::invalid_argument("Number of indices does not match required amount"); 
+        //formula to calculate flattened index: Slot = offset + i0s0 + i1s1 + ... + insn
+        int64_t res = offset; 
+        for (int64_t i = 0; i < dim(); i++) {
+            if (indices[i] < 0 || indices[i] >= shape[i]) throw std::out_of_range("Index out of bounds"); 
+            res += (indices[i] * strides[i]); 
+        }
+        
+        return res; 
+    }
+
 
 public: 
 
@@ -132,9 +144,15 @@ public:
         return numel(shape); 
     }
 
+    //operator() overload -- returns a specific element in the Tensor with a multi-dimensional index 
+    const float& operator()(const std::vector<int64_t>& indices) const {
+         return (*storage)[flatIdx(indices)];  
+    }
 
-
-
+    //operator() overload -- returns a reference to a specific element in the Tensor, allowing rewriting
+    float& operator()(const std::vector<int64_t>& indices) {
+        return (*storage)[flatIdx(indices)]; 
+    }
 }; 
 
 
