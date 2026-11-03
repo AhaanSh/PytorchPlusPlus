@@ -45,18 +45,9 @@ class Tensor {
     std::vector<int64_t> strides; 
     int64_t offset; 
 
-public: 
+private: 
 
-    explicit Tensor(std::shared_ptr<Storage> s, std::vector<int64_t> shape_in, std::vector<int64_t> strides_in, int64_t offset_in) : storage(std::move(s)), shape(std::move(shape_in)), strides(std::move(strides_in)), offset(offset_in) {
-        if (shape.size() != strides.size()) throw std::invalid_argument("Shape and Strides need same size"); 
-        if (offset < 0) throw std::invalid_argument("Can't have negative offset"); 
-        if (storage == nullptr) throw std::invalid_argument("Can't have null storage"); 
-        for (int64_t elem : shape) {
-            if (elem < 0) throw std::invalid_argument("Shape can't have negative argument"); 
-        }
-    }
-
-    //return the strides vector given the shape 
+    //return the default strides vector given the shape 
     static std::vector<int64_t> defaultStrides(const std::vector<int64_t>& shapes) {
         int64_t total = 1; 
         std::vector<int64_t> tempStrides(shapes.size(), 0); 
@@ -74,6 +65,19 @@ public:
         for (int64_t s : shapes) total *= s; 
         return total; 
     }
+
+
+public: 
+
+    explicit Tensor(std::shared_ptr<Storage> s, std::vector<int64_t> shape_in, std::vector<int64_t> strides_in, int64_t offset_in) : storage(std::move(s)), shape(std::move(shape_in)), strides(std::move(strides_in)), offset(offset_in) {
+        if (shape.size() != strides.size()) throw std::invalid_argument("Shape and Strides need same size"); 
+        if (offset < 0) throw std::invalid_argument("Can't have negative offset"); 
+        if (storage == nullptr) throw std::invalid_argument("Can't have null storage"); 
+        for (int64_t elem : shape) {
+            if (elem < 0) throw std::invalid_argument("Shape can't have negative argument"); 
+        }
+    }
+
 
     //return a tensor of specific shape and fill with val
     static Tensor full(const std::vector<int64_t>& shapes, float val) {
@@ -122,6 +126,13 @@ public:
     int64_t dim() const {
         return static_cast<int64_t>(shape.size()); 
     }
+
+    //returns total number of elements in a Tensor 
+    int64_t numel() const {
+        return numel(shape); 
+    }
+
+
 
 
 }; 
