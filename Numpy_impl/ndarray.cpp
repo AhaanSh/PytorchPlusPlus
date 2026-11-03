@@ -92,6 +92,14 @@ public:
     static Tensor ones(const std::vector<int64_t>& shapes) {
         return full(shapes, 1.0f); 
     }
+
+    //returns a tensor with offset 0 with data from data 
+    static Tensor fromData(std::vector<float> data, std::vector<int64_t> shape_in) {
+        if (numel(shape_in) != static_cast<int64_t>(data.size())) throw std::invalid_argument("Shape does not match data size"); 
+        std::vector<int64_t> strides_in = getStrides(shape_in); 
+        std::shared_ptr<Storage> s = std::make_shared<Storage>(std::move(data)); 
+        return Tensor(std::move(s), std::move(shape_in), std::move(strides_in), 0); 
+    }
 }; 
 
 
