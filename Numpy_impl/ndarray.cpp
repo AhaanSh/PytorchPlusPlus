@@ -57,7 +57,7 @@ public:
     }
 
     //return the strides vector given the shape 
-    static std::vector<int64_t> getStrides(const std::vector<int64_t>& shapes) {
+    static std::vector<int64_t> defaultStrides(const std::vector<int64_t>& shapes) {
         int64_t total = 1; 
         std::vector<int64_t> tempStrides(shapes.size(), 0); 
         for (int64_t i = static_cast<int64_t>(shapes.size()) - 1; i >= 0; i--) {
@@ -77,7 +77,7 @@ public:
 
     //return a tensor of specific shape and fill with val
     static Tensor full(const std::vector<int64_t>& shapes, float val) {
-        std::vector<int64_t> stridesIn = getStrides(shapes); 
+        std::vector<int64_t> stridesIn = defaultStrides(shapes); 
         int64_t numElem = numel(shapes); 
         std::shared_ptr<Storage> s = std::make_shared<Storage>(numElem, val); 
         return Tensor(std::move(s), shapes, std::move(stridesIn), 0); 
@@ -96,10 +96,34 @@ public:
     //returns a tensor with offset 0 with data from data 
     static Tensor fromData(std::vector<float> data, std::vector<int64_t> shape_in) {
         if (numel(shape_in) != static_cast<int64_t>(data.size())) throw std::invalid_argument("Shape does not match data size"); 
-        std::vector<int64_t> strides_in = getStrides(shape_in); 
+        std::vector<int64_t> strides_in = defaultStrides(shape_in); 
         std::shared_ptr<Storage> s = std::make_shared<Storage>(std::move(data)); 
         return Tensor(std::move(s), std::move(shape_in), std::move(strides_in), 0); 
     }
+
+    //accessor functions 
+
+    //returns a const reference to shape for a Tensor 
+    const std::vector<int64_t>& getShape() const {
+        return shape; 
+    }
+
+    //returns a const reference to strides for a Tensor
+    const std::vector<int64_t>& getStrides() const {
+        return strides; 
+    }
+
+    //returns offset value for a Tensor 
+    int64_t getOffset() const {
+        return offset; 
+    }
+
+    //returns dimension of shape for a Tensor
+    int64_t dim() const {
+        return static_cast<int64_t>(shape.size()); 
+    }
+
+
 }; 
 
 
