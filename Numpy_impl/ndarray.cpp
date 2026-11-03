@@ -10,6 +10,7 @@ class Storage {
     std::vector<float> mem; 
 
 public: 
+
     //constructor that moves a flattened 1D vector into mem 
     explicit Storage(std::vector<float> flattened) : mem(std::move(flattened)) {}
 
@@ -35,8 +36,6 @@ public:
         if (i < 0 || i >= size()) throw std::out_of_range("Index out of bounds"); 
         return mem[i]; 
     }
-
-
 }; 
 
 class Tensor {
