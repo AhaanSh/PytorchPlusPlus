@@ -199,6 +199,16 @@ public:
         return Tensor(storage, std::move(newShape), std::move(newStrides), offset); 
     }
 
+    //transpose -- swaps dim0 and dim1
+    Tensor transpose(int64_t dim0, int64_t dim1) const {
+        if (dim0 < 0 || dim0 >= dim() || dim1 < 0 || dim1 >= dim()) throw std::out_of_range("Dimension out of range"); 
+        std::vector<int64_t> newShape = shape; 
+        std::vector<int64_t> newStrides = strides; 
+        std::swap(newShape[dim0], newShape[dim1]); 
+        std::swap(newStrides[dim0], newStrides[dim1]); 
+        return Tensor(storage, std::move(newShape), std::move(newStrides), offset); 
+    }
+
 
 }; 
 
