@@ -4,6 +4,7 @@
 #include <stdexcept> 
 #include <string> 
 #include <utility> 
+#include <algorithm> 
 
 class Storage {
     //flat buffer to store data 
@@ -169,7 +170,7 @@ public:
         //compute new strides
         std::vector<int64_t> newStrides = defaultStrides(newShape); 
 
-        return Tensor(std::move(storage), std::move(newShape), std::move(newStrides), 0); 
+        return Tensor(storage, std::move(newShape), std::move(newStrides), offset); 
     }
 
     //unsqueeze -- adds a size 1 dimension 
@@ -185,14 +186,17 @@ public:
 
         //compute new strides
         std::vector<int64_t> newStrides = defaultStrides(newShape);
-        return Tensor(std::move(storage), std::move(newShape), std::move(newStrides), 0); 
+        return Tensor(storage, std::move(newShape), std::move(newStrides), offset); 
     }
 
-    //transpose -- computes the default transpose and returns new Tensor 
+    //transpose -- computes the default transpose (reverse all axis) and returns new Tensor 
     Tensor transpose() const {
-        
-
-
+        //need to reverse shapes and strides vectors 
+        std::vector<int64_t> newShape = shape; 
+        std::vector<int64_t> newStrides = strides; 
+        std::reverse(newShape.begin(), newShape.end()); 
+        std::reverse(newStrides.begin(), newStrides.end()); 
+        return Tensor(storage, std::move(newShape), std::move(newStrides), offset); 
     }
 
 
