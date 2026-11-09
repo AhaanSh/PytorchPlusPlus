@@ -154,7 +154,7 @@ public:
     }
 
     //squeeze -- removes a size 1 dimension and returns a new Tensor 
-    const Tensor squeeze(int64_t dimension) const {
+    Tensor squeeze(int64_t dimension) const {
         if (dimension < 0 || dimension >= dim()) throw std::out_of_range("Dimension out of range"); 
         if (shape[dimension] != 1) throw std::invalid_argument("Dimension expected size 1"); 
 
@@ -173,7 +173,7 @@ public:
     }
 
     //unsqueeze -- adds a size 1 dimension 
-    const Tensor unsqueeze(int64_t dimension) {
+    Tensor unsqueeze(int64_t dimension) const {
         if (dimension < 0 || dimension > dim()) throw std::out_of_range("Dimension out of range"); 
 
         //compute new shape 
@@ -188,7 +188,14 @@ public:
         return Tensor(std::move(storage), std::move(newShape), std::move(newStrides), 0); 
     }
 
-    
+    //transpose -- computes the default transpose and returns new Tensor 
+    Tensor transpose() const {
+        
+
+
+    }
+
+
 }; 
 
 
