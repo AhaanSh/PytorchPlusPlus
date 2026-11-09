@@ -152,6 +152,43 @@ public:
     float& operator()(const std::vector<int64_t>& indices) {
         return (*storage)[flatIdx(indices)]; 
     }
+
+    //squeeze -- removes a size 1 dimension and returns a new Tensor 
+    const Tensor squeeze(int64_t dimension) const {
+        if (dimension < 0 || dimension >= dim()) throw std::out_of_range("Dimension out of range"); 
+        if (shape[dimension] != 1) throw std::invalid_argument("Dimension expected size 1"); 
+
+        //compute new shape without dim
+        std::vector<int64_t> newShape; 
+        for (int64_t i = 0; i < dim(); i++) {
+            if (i != dimension) {
+                newShape.push_back(shape[i]); 
+            }
+        }
+
+        //compute new strides
+        std::vector<int64_t> newStrides = defaultStrides(newShape); 
+
+        return Tensor(std::move(storage), std::move(newShape), std::move(newStrides), 0); 
+    }
+
+    //unsqueeze -- adds a size 1 dimension 
+    const Tensor unsqueeze(int64_t dimension) {
+        if (dimension < 0 || dimension > dim()) throw std::out_of_range("Dimension out of range"); 
+
+        //compute new shape 
+        std::vector<int64_t> newShape; 
+        for (int64_t i = 0; i < dim(); i++) {
+            if (i != dimension) newShape.push_back(shape[i]); 
+            else newShape.push_back(1); 
+        }
+
+        //compute new strides
+        std::vector<int64_t> newStrides = defaultStrides(newShape);
+        return Tensor(std::move(storage), std::move(newShape), std::move(newStrides), 0); 
+    }
+
+    
 }; 
 
 
