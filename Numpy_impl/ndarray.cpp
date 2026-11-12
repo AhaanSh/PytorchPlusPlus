@@ -117,8 +117,6 @@ public:
         return Tensor(std::move(s), std::move(shape_in), std::move(strides_in), 0); 
     }
 
-    //accessor functions 
-
     //returns a const reference to shape for a Tensor 
     const std::vector<int64_t>& getShape() const {
         return shape; 
@@ -145,6 +143,7 @@ public:
     }
 
     //operator() overload -- returns a specific element in the Tensor with a multi-dimensional index 
+    //TO-DO: Can template this function so we don't need to allocate a vector each time 
     const float& operator()(const std::vector<int64_t>& indices) const {
          return (*storage)[flatIdx(indices)];  
     }
@@ -189,7 +188,7 @@ public:
         return Tensor(storage, std::move(newShape), std::move(newStrides), offset); 
     }
 
-    //transpose -- computes the default transpose (reverse all axis) and returns new Tensor 
+    //transpose -- computes the default transpose (reverse all axes) and returns new Tensor 
     Tensor transpose() const {
         //need to reverse shapes and strides vectors 
         std::vector<int64_t> newShape = shape; 
@@ -208,8 +207,6 @@ public:
         std::swap(newStrides[dim0], newStrides[dim1]); 
         return Tensor(storage, std::move(newShape), std::move(newStrides), offset); 
     }
-
-
 }; 
 
 
