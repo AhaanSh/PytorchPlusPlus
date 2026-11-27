@@ -172,6 +172,25 @@ public:
         std::swap(newStrides[dim0], newStrides[dim1]); 
         return Tensor(storage, std::move(newShape), std::move(newStrides), offset); 
     }
+
+    //isContigious -- checks if a tensor matches default row-major strides for its shape 
+    bool isContiguous() const {
+        int64_t expected = 1; 
+        for (int64_t i = dim() - 1; i >= 0; i--) {
+            if (shape[i] == 1) continue; 
+            if (strides[i] == expected) {
+                expected *= shape[i]; 
+            } else return false; 
+        }
+
+        return true; 
+    }
+
+    //contigious -- returns a contigious version of the tensor 
+    Tensor contiguous() const {
+        if (isContiguous()) return *this; 
+        
+    }
 }; 
 
 
