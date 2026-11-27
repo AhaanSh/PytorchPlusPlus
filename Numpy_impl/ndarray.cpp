@@ -160,14 +160,13 @@ public:
 
         //compute new shape without dim
         std::vector<int64_t> newShape; 
+        std::vector<int64_t> newStrides; 
         for (int64_t i = 0; i < dim(); i++) {
             if (i != dimension) {
                 newShape.push_back(shape[i]); 
+                newStrides.push_back(strides[i]); 
             }
         }
-
-        //compute new strides
-        std::vector<int64_t> newStrides = defaultStrides(newShape); 
 
         return Tensor(storage, std::move(newShape), std::move(newStrides), offset); 
     }
@@ -177,14 +176,11 @@ public:
         if (dimension < 0 || dimension > dim()) throw std::out_of_range("Dimension out of range"); 
 
         //compute new shape 
-        std::vector<int64_t> newShape; 
-        for (int64_t i = 0; i < dim(); i++) {
-            if (i != dimension) newShape.push_back(shape[i]); 
-            else newShape.push_back(1); 
-        }
+        std::vector<int64_t> newShape = shape; 
+        std::vector<int64_t> newStrides = strides; 
+        newShape.insert(newShape.begin() + dimension, 1); 
+        newStrides.insert(newStrides.begin() + dimension, 1); 
 
-        //compute new strides
-        std::vector<int64_t> newStrides = defaultStrides(newShape);
         return Tensor(storage, std::move(newShape), std::move(newStrides), offset); 
     }
 
