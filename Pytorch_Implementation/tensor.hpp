@@ -57,7 +57,6 @@ private:
         return false; 
     }
 
-
 public: 
 
     explicit Tensor(std::shared_ptr<Storage> s, std::vector<int64_t> shape_in, std::vector<int64_t> strides_in, int64_t offset_in) : storage(std::move(s)), shape(std::move(shape_in)), strides(std::move(strides_in)), offset(offset_in) {
@@ -68,7 +67,6 @@ public:
             if (elem < 0) throw std::invalid_argument("Shape can't have negative argument"); 
         }
     }
-
 
     //return a tensor of specific shape and fill with val
     static Tensor full(const std::vector<int64_t>& shapes, float val) {
