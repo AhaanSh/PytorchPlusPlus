@@ -47,6 +47,16 @@ private:
         return res; 
     }
 
+    //walks to the next index and returns true if it is valid, also modifies index by reference 
+    static bool walkIdx(std::vector<int64_t>& index, const std::vector<int64_t>& shapeIn) {
+        for (int64_t i = static_cast<int64_t>(shapeIn.size()) - 1; i >= 0; i--) {
+            if (++index[i] < shapeIn[i]) return true; 
+            index[i] = 0; 
+        }
+
+        return false; 
+    }
+
 
 public: 
 
@@ -188,8 +198,23 @@ public:
 
     //contigious -- returns a contigious version of the tensor 
     Tensor contiguous() const {
-        if (isContiguous()) return *this; 
+        if (isContiguous() || numel() == 0) return *this; 
+
+        //create new storage -- fill with 0's for now 
+        std::shared_ptr<Storage> newStorage = std::make_shared<Storage>(numel(), 0.0f); 
+
+        //visit all elements of *this in row-major order and place them in storage 
+        std::vector<int64_t> idx(dim(), 0); 
+        bool walk = true; 
+        int64_t i = 0; 
+        while (walk) {
+            (*newStorage)[i]= (*this)(idx); 
+            walk = walkIdx(idx, shape); 
+            i++; 
+        }
         
+        //return new tensor 
+        return Tensor(std::move(newStorage), shape, defaultStrides(shape), 0); 
     }
 }; 
 
